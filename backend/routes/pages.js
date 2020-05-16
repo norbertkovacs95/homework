@@ -106,7 +106,7 @@ async function parseAndCreateBlogs(req, res, next) {
         .toArray()
         .map((tag) => ({
           tagType: tag.name,
-          html: cheerio.load(tag).html(),
+          html: getInnerText(tag),
           blog: blogDoc._id,
         }));
 
@@ -121,4 +121,12 @@ async function parseAndCreateBlogs(req, res, next) {
 
   res.data.tags = tags;
   next();
+}
+
+//Helper function to retrive inner html
+function getInnerText(tag) {
+    let node = tag;
+    while(node.type === "tag") 
+        node = node.lastChild;
+    return node.data;
 }
