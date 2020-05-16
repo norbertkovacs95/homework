@@ -1,0 +1,10 @@
+.blogsContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .blogsContainer > div {
+    margin:5px;
+  }

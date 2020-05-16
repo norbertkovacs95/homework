@@ -1,20 +1,19 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
+import Paper from '@material-ui/core/Paper';
+
 import "./Blog.css";
+import Title from './Title/Title';
+import Tag from './Tag/Tag';
 
 export default function Blog(props) {
-    const { tags } = props;
-    const [ tags, setTags ] = useState(null);
+    const { blog } = props;
 
-    useEffect(() => setTags(null), [props.pages]);
-    setTimeout(() => setTags("asd"), 1000);
-
-   if(!tags) {
-        return <CircularProgress size={100}/>
-    } else {
-        return (
-            <div>
-                Hola, Pages: {pages}, Tags: {tags}
-            </div>
-        );
-    }
+   return (
+       <Paper>
+           <Title title={blog.name}/>
+           <div className="blogsContainer">
+                {blog.tags.map(tag => <Tag tag={tag}/>)}
+           </div>
+       </Paper>
+   );
 }
