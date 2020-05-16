@@ -8,6 +8,7 @@ const BASE_URL = require("../config").baseUrl;
 const Tag = require("../models/tag");
 const Blog = require("../models/blog");
 
+
 /* GET blogs for :page */
 router.get(
   "/:page",
@@ -60,11 +61,11 @@ async function queryDatabase(req, res, next) {
 
   try {
     //const deleted = await Blog.remove({});
-    const blogDocs = await Blog.find({
-      name: { $in: blogs.map((blog) => blog.name) },
-    })
-      .populate("tags")
-      .exec();
+    const blogDocs = await Blog.find(
+            { name: { $in: blogs.map((blog) => blog.name) }
+        })
+        .populate("tags")
+        .exec();
     res.data.blogDocs = blogDocs;
     return next();
   } catch (err) {
@@ -76,9 +77,12 @@ async function queryDatabase(req, res, next) {
 async function parseAndCreateBlogs(req, res, next) {
   const blogs = res.data.blogs;
   const blogDocs = res.data.blogDocs;
-  
+
   if (blogs.length === blogDocs.length) {
-    res.data.tags = blogDocs.map(blogDoc => blogDoc.tags).flat();
+    res.data.tags = blogDocs.map((blogDoc) => ({
+      name: blogDoc.name,
+      tags: blogDoc.tags,
+    }));
     return next();
   }
 
@@ -105,10 +109,11 @@ async function parseAndCreateBlogs(req, res, next) {
           html: cheerio.load(tag).html(),
           blog: blogDoc._id,
         }));
+
       const tagDocs = await Tag.create(tagsPerBlog);
       blogDoc.tags = tagDocs.map((tagDoc) => tagDoc._id);
       blogDoc.save();
-      tags = tags.concat(tagDocs);
+      tags.push({ name: blog.name, tags: tagDocs });
     } catch (err) {
       return next(err);
     }
