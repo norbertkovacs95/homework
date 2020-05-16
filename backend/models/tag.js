@@ -6,12 +6,12 @@ const tagSchema = new Schema({
             type : String, 
             required: true
         },
-        innerHtml: {
+        html: {
             type: String,
             required: true
         },
         blog: {
-            type: mongoose.Types.ObjectId,
+            type: mongoose.Schema.Types.ObjectId,
             ref: 'Blog',
             required: true
         }

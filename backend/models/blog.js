@@ -6,13 +6,8 @@ const blogSchema = new Schema({
             type : String, 
             required: true
         },
-        page: {
-            type: mongoose.Types.ObjectId,
-            ref: 'Page',
-            required: true
-        },
         tags: [{
-            type: mongoose.Types.ObjectId,
+            type: mongoose.Schema.Types.ObjectId,
             ref: 'Tag'
         }]
     },
