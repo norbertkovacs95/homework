@@ -23,7 +23,7 @@ router.get(
 
 module.exports = router;
 
-//Parse pages and return the found articles
+//Parse pages each page and return the found articles
 async function parsePages(req, res, next) {
   res.data = {};
   let pages = req.params.page;
@@ -60,12 +60,12 @@ async function parsePages(req, res, next) {
   return next();
 }
 
-//Query database for already found articles
+//Query database for already parsed articles
 async function queryDatabase(req, res, next) {
   const blogs = res.data.blogs;
 
   try {
-    //const deleted = await Blog.remove({});
+    const deleted = await Blog.remove({});
     const blogDocs = await Blog.find({
       name: { $in: blogs.map((blog) => blog.name) }
     })
@@ -82,6 +82,7 @@ async function queryDatabase(req, res, next) {
 async function parseAndCreateBlogs(req, res, next) {
   const blogs = res.data.blogs;
   const blogDocs = res.data.blogDocs;
+  const blogNames = blogDocs.map((blog) => blog.name);
 
   if (blogs.length === blogDocs.length) {
     res.data.tags = blogDocs.map((blogDoc) => ({
@@ -92,15 +93,18 @@ async function parseAndCreateBlogs(req, res, next) {
   }
 
   let tags = [];
-  blogNames = blogDocs.map((blog) => blog.name);
 
   for (let i = 0; i < blogs.length; i++) {
     const blog = blogs[i];
     try {
       if (blogNames.includes(blog.name)) {
-        tags.push(
-          blogDocs.filter((blogDoc) => blogDoc.name === blog.name)[0].tags
-        );
+        let blogDoc = blogDocs.filter(
+          (blogDoc) => blogDoc.name === blog.name
+        )[0];
+        tags.push({
+          name: blogDoc.name,
+          tags: blogDoc.tags
+        });
         continue;
       }
 
