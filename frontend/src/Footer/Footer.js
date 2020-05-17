@@ -7,8 +7,7 @@ import GitHubIcon from '@material-ui/icons/GitHub';
 import Link from '@material-ui/core/Link';
 import Typography from '@material-ui/core/Typography';
 
-export default function Tag(props) {
-  const { tag } = props;
+export default function Tag() {
   return (
     <div className="footer">
         <div className="githubPage">

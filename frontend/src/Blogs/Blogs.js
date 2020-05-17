@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import Fab from '@material-ui/core/Fab';
-import NavigationIcon from '@material-ui/icons/Navigation';
 import axios from "axios";
 
 import "./Blogs.css";
@@ -31,7 +29,7 @@ export default function Blogs(props) {
   useEffect(fetchBlogs, [props.pages]);
 
   if(errState){
-    return <p>Error happened, {errState.status}</p>
+    return <p>Error happened, {errState}</p>
   }
   else if (!blogs) {
     return <CircularProgress size={100} />;
