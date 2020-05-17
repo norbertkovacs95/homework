@@ -4,6 +4,7 @@ import axios from "axios";
 
 import "./Blogs.css";
 import Blog from "./Blog/Blog";
+import CustomSnackbar from '../CustomSnackbar/CustomSnackbar';
 import { BASE_URL } from "../Shared/baseURL";
 
 export default function Blogs(props) {
@@ -29,13 +30,19 @@ export default function Blogs(props) {
   useEffect(fetchBlogs, [props.pages]);
 
   if(errState){
-    return <p>Error happened, {errState}</p>
+    return (
+      <div>
+          <CustomSnackbar severity="error" message="Something went wrong :(" open={true}/>
+          {console.log(errState)}
+      </div>
+    );
   }
   else if (!blogs) {
     return <CircularProgress size={100} />;
   } else {
     return (
         <div className="container">
+            <CustomSnackbar severity="success" message='Blogs parsed successfully' open={true}/>
             {blogs.map((blog) => <Blog blog={blog} />)}
         </div>
     )
