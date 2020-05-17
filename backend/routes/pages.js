@@ -65,7 +65,6 @@ async function queryDatabase(req, res, next) {
   const blogs = res.data.blogs;
 
   try {
-    const deleted = await Blog.remove({});
     const blogDocs = await Blog.find({
       name: { $in: blogs.map((blog) => blog.name) }
     })
