@@ -43,8 +43,8 @@ async function parsePages(req, res, next) {
           }))
       );
     } catch (err) {
-      if ((err.response.status = 404 && blogs.length !== 0)) {
-        req.data.blogs = blogs;
+      if ((err.response.status == 404 && blogs.length !== 0)) {
+        res.data.blogs = blogs;
         return next();
       }
       return next(err.response);
