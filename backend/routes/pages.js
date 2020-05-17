@@ -8,7 +8,6 @@ const BASE_URL = require("../config").baseUrl;
 const Tag = require("../models/tag");
 const Blog = require("../models/blog");
 
-
 /* GET blogs for :page */
 router.get(
   "/:page",
@@ -30,6 +29,12 @@ async function parsePages(req, res, next) {
   let pages = req.params.page;
   let blogs = [];
 
+  if (isNaN(parseInt(pages)) || pages < 1) {
+    err = new Error("Unprocessable Entity");
+    err.status = 404;
+    next(err);
+  }
+
   for (let i = 1; i <= pages; i++) {
     try {
       const { data } = await axios.get(`${BASE_URL}/page/${i}`);
@@ -43,11 +48,11 @@ async function parsePages(req, res, next) {
           }))
       );
     } catch (err) {
-      if ((err.response.status == 404 && blogs.length !== 0)) {
+      if (err.response && err.response.status == 404 && blogs.length !== 0) {
         res.data.blogs = blogs;
         return next();
       }
-      return next(err.response);
+      return next(err);
     }
   }
 
@@ -61,11 +66,11 @@ async function queryDatabase(req, res, next) {
 
   try {
     //const deleted = await Blog.remove({});
-    const blogDocs = await Blog.find(
-            { name: { $in: blogs.map((blog) => blog.name) }
-        })
-        .populate("tags")
-        .exec();
+    const blogDocs = await Blog.find({
+      name: { $in: blogs.map((blog) => blog.name) }
+    })
+      .populate("tags")
+      .exec();
     res.data.blogDocs = blogDocs;
     return next();
   } catch (err) {
@@ -125,8 +130,7 @@ async function parseAndCreateBlogs(req, res, next) {
 
 //Helper function to retrive inner html
 function getInnerText(tag) {
-    let node = tag;
-    while(node.type === "tag") 
-        node = node.lastChild;
-    return node.data;
+  let node = tag;
+  while (node.type === "tag") node = node.lastChild;
+  return node.data;
 }
