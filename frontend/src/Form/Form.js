@@ -22,9 +22,10 @@ export default function Form(props) {
 
   return (
     <div onSubmit={ handleSubmit }>
-      <h2 className="label">Parse each tag from each blog on from risingstack.blog</h2>
+      <h2 className="label">Parse each tag from each blog on risingstack.blog</h2>
       <form className="formContainer">
         <TextField 
+          size="medium"
           label="Number of pages" 
           type="number" 
           inputProps = { { min: 0} }
